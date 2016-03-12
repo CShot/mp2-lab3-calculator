@@ -58,7 +58,7 @@ int TStack::Get(void)
 	return pMem[top--];
 }
 
-int TStack::Peek(void)
+int TStack::Peek(void) 
 {
 	return pMem[top];
 }
