@@ -4,15 +4,17 @@
 #include<cstring>
 #include<ctype.h>
 #include<locale.h>
+#include <setjmp.h>
 
 using namespace std;
 
 const int Max_Size_Str = 50;
 
 int priority(char str_s);
-int polish_notation(char , char );
-
-
+void polish_notation(char *str, char *result);
+int foolproof(char *str);
+char operation(char str, int op1, int op2);
+jmp_buf ebuf;
 
 int priority(char str_s)
 {
@@ -92,6 +94,90 @@ void polish_notation(char *str, char *result)
 	}
 }
 
+char operation(char str, int op1, int op2)
+{
+	char res = 0;
+	if (str == '+')
+	{
+		res = op1+op2;
+	}
+	if (str == '-')
+	{
+		res = op1 - op2;
+	}
+	if (str == '*')
+	{
+		res = op1 * op2;
+	}
+	if (str == '/')
+	{
+		res = op1 / op2;
+	}
+	return res;
+}
+
+void calculator(char *str)
+{
+	TStack Stack;
+	int op1 = 0; 
+	int op2 = 0; 
+	char oper = 0;
+	char val = 0;
+	float result = 0;
+	int i = 0;
+	while (str[i] != NULL)
+	{
+		if ((str[i] >= 48) || (str[i] <= 57))
+		{
+			Stack.Put(str[i]);
+		}
+		else
+		{
+			val = NULL;
+			val = Stack.Get();
+			if ((str[i] >= 48) || (str[i] <= 57))
+			{
+				op2 = (int)val - 48;
+			}
+			else
+			{
+				op2 = val;
+			}
+			if (Stack.IsEmpty())
+			{
+				longjmp(ebuf,1);
+				break;
+			}
+			else 
+			{
+				val = NULL;
+				val = Stack.Get();
+				if ((str[i] >= 48) || (str[i] <= 57))
+				{
+					op1= (int)val - 48;
+				}
+				else
+				{
+					op1 = val;
+				}
+				oper = str[i];
+				if ((oper = '/') && (op2 == 0))
+				{
+					longjmp(ebuf, 1);
+					break;
+				}
+				else
+				{
+					result = operation(oper, op1, op2);
+					Stack.Put(result);
+				}
+			}
+		}
+		i++;
+	}
+	cout << endl << "Результат=" << result << endl;
+}
+
 int foolproof(char *str)
 {
 	int ch = 0;
@@ -148,23 +234,33 @@ int main()
 	int a = 0;
 	do {
 		double result = 0.0;
-		char str[Max_Size_Str];
-		char str_2[Max_Size_Str] = " ";
+		char str_1[Max_Size_Str];
+		char str[Max_Size_Str] = " ";
 		int ch;
+		int C1= setjmp(ebuf);
 		setlocale(LC_ALL, "RUS");
 		system("cls");
 		cout << "Введите пример: ";
-		cin >> str;
-		ch = foolproof(str);
+		cin >> str_1;
+		ch = foolproof(str_1);
 		if (ch == 1)
 		{
+			C3:
 			cout << "Некоректное выражение" << endl;
-			goto C1;
+			goto C2;
 			
 		}
-		polish_notation(str, str_2);
-		cout << str_2 << endl;
-		C1:
+		polish_notation(str_1, str);
+		cout << str << endl;
+		if (C1 == 1)
+		{
+			goto C3;
+		}
+		else
+		{
+			calculator(str);
+		}
+		C2:
 		cout << "Хотите повторить?" << endl;
 		cout << "1.Да" << endl;
 		cout << "2.Нет" << endl;
