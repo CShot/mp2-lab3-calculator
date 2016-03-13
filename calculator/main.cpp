@@ -92,15 +92,84 @@ void polish_notation(char *str, char *result)
 	}
 }
 
+int foolproof(char *str)
+{
+	int ch = 0;
+	int i = 0;
+	int q = 0, p = 0;
+	while (str[i] != NULL) //Неподходящие символы(ASCII)
+	{
+		if ((str[i]<40) || (str[i]>57) || (str[i] == 44) || (str[i] == 46))
+		{
+			ch = 1;
+		}
+		i++;
+	}
+	i = 0;
+	if ((str[0] > 57) || (str[0] < 48) && (str[0] != 45) && (str[0] != 40))//Корректность 1-го символа
+	{
+		ch = 1;
+	}
+	if ((str[strlen(str)-1] > 57) || (str[strlen(str) - 1] < 48) && (str[strlen(str) - 1] != 41))//Корректность последнего символа
+	{
+		ch = 1;
+	}
+	while (str[i] != NULL) //Парность/непарность скобок
+	{
+		if (str[i] == 40)
+		{
+			q++;
+		}
+		if (str[i] == 41)
+		{
+			p++;
+		}
+		i++;
+	}
+	if (q != p)
+	{
+		ch = 1;
+	}
+	i = 0; q = 0; p = 0;
+	while (str[i] != NULL) //Повторение символов
+	{
+		if ((str[i] >= 42) && (str[i] <= 47) && (str[i + 1] >= 42) && (str[i + 1] <= 47))
+		{
+			ch = 1;
+		}
+		i++;
+	}
+	i = 0;
+  return ch;
+}
+
 int main()
 {
-	double result = 0.0;
-	char str[Max_Size_Str];
-	char str_2[Max_Size_Str] = " ";
-	setlocale(LC_ALL, "RUS");
-	cout << "Введите пример: ";
-	cin >> str;
-	polish_notation(str, str_2);
-	cout << str_2 << endl;
+	int a = 0;
+	do {
+		double result = 0.0;
+		char str[Max_Size_Str];
+		char str_2[Max_Size_Str] = " ";
+		int ch;
+		setlocale(LC_ALL, "RUS");
+		system("cls");
+		cout << "Введите пример: ";
+		cin >> str;
+		ch = foolproof(str);
+		if (ch == 1)
+		{
+			cout << "Некоректное выражение" << endl;
+			goto C1;
+			
+		}
+		polish_notation(str, str_2);
+		cout << str_2 << endl;
+		C1:
+		cout << "Хотите повторить?" << endl;
+		cout << "1.Да" << endl;
+		cout << "2.Нет" << endl;
+		cin >> a ;
+		cout << endl;
+	} while (a != 2);
 	return 0;
 }
