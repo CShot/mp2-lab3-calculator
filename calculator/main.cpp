@@ -38,7 +38,7 @@ int priority(char str_s)
 	{
 		return 3;
 	}
-	if (str_s == '(')
+	if (str_s == '/')
 	{
 		return 3;
 	}
@@ -111,81 +111,113 @@ char operation(char str, int op1, int op2)
 	}
 	if (str == '/')
 	{
-		res = op1 / op2;
+		if (op2 == 0)
+		{
+			cout << "Делить на 0 нельзя!" << endl;
+			return 0;
+		}
+		else
+		{
+			res = op1 / op2;
+		}
 	}
 	return res;
 }
 
-void calculator(char *str)
+void calculator(char * str)
 {
-	TStack Stack;
-	int op1 = 0; 
-	int op2 = 0; 
-	char oper = 0;
-	char val = 0;
+	TStack CStack;
+	TStack OStack;
+	int op1, op2;
+	char op;
 	float result = 0;
-	int i = 0;
+	int val = 0;
+	int i = 0; 
+
 	while (str[i] != NULL)
 	{
-		if ((str[i] >= 48) || (str[i] <= 57))
+		while ((str[i] != '*') && (str[i] != '/') && (str[i] != '+') && (str[i] != '-') && (str[i] != '(') && (str[i] != ')'))
 		{
-			Stack.Put(str[i]);
+			val = 0;
+			while (isdigit(str[i]))
+			{
+				val = val * 10 + (str[i++] - 48);
+			}
+			CStack.Put(val);
+			if (str[i] == NULL)
+			{
+				break;
+			}
+		}
+		if (str[i] == NULL)
+		{
+			break;
+		}
+		if (str[i] == '(')
+		{
+			OStack.Put(str[i]);
+			i++;
+			continue;
+		}
+		if (str[i] == ')')
+		{
+			op = OStack.Get();
+			while (op != '(')
+			{
+				op2 = CStack.Get();
+				op1 = CStack.Get();
+				result = operation(op, op1, op2);
+				CStack.Put(result);
+				op = OStack.Get();
+			}
+			i++;
+			continue;
+		}
+		if (OStack.IsEmpty())
+		{
+			OStack.Put(str[i]);
 		}
 		else
 		{
-			val = NULL;
-			val = Stack.Get();
-			if ((str[i] >= 48) || (str[i] <= 57))
+			op = OStack.Peek();
+			if (priority((char)op) < (priority(str[i])))
 			{
-				op2 = (int)val - 48;
+				OStack.Put(str[i]);
 			}
 			else
 			{
-				op2 = val;
-			}
-			if (Stack.IsEmpty())
-			{
-				longjmp(ebuf,1);
-				break;
-			}
-			else 
-			{
-				val = NULL;
-				val = Stack.Get();
-				if ((str[i] >= 48) || (str[i] <= 57))
-				{
-					op1= (int)val - 48;
-				}
-				else
-				{
-					op1 = val;
-				}
-				oper = str[i];
-				if ((oper = '/') && (op2 == 0))
-				{
-					longjmp(ebuf, 1);
-					break;
-				}
-				else
-				{
-					result = operation(oper, op1, op2);
-					Stack.Put(result);
-				}
+				op = OStack.Get();
+				op2 = CStack.Get();
+				op1 = CStack.Get();
+				result = operation(op, op1, op2);
+				CStack.Put(result);
+				OStack.Put(str[i]);
 			}
 		}
 		i++;
 	}
-	cout << endl << "Результат=" << result << endl;
+	while (!OStack.IsEmpty())
+	{
+		op = OStack.Get();
+		op2 = CStack.Get();
+		op1 = CStack.Get();
+		result = operation(op, op1, op2);
+		CStack.Put(result);
+	}
+	result = CStack.Get();
+	cout << "Результат: " << result << endl;
 }
+
 
 int foolproof(char *str)
 {
 	int ch = 0;
 	int i = 0;
 	int q = 0, p = 0;
+	TStack skob;
 	while (str[i] != NULL) //Неподходящие символы(ASCII)
 	{
-		if ((str[i]<40) || (str[i]>57) || (str[i] == 44) || (str[i] == 46))
+		if ((str[i]<40) || (str[i]>57) || (str[i] == 44) || (str[i] == 46) || (str[i] == 32))
 		{
 			ch = 1;
 		}
@@ -217,6 +249,24 @@ int foolproof(char *str)
 		ch = 1;
 	}
 	i = 0; q = 0; p = 0;
+	while (str[i] != NULL) //Порядок скобок
+	{
+		if (str[i] == '(')
+		{
+			skob.Put(str[i]);
+			i++;
+			continue;
+		}
+		if (str[i] == ')')
+		{
+			if (skob.IsEmpty())
+			{
+				ch = 1;
+			}
+		}
+		i++;
+	}
+	i = 0;
 	while (str[i] != NULL) //Повторение символов
 	{
 		if ((str[i] >= 42) && (str[i] <= 47) && (str[i + 1] >= 42) && (str[i + 1] <= 47))
@@ -233,11 +283,11 @@ int main()
 {
 	int a = 0;
 	do {
-		double result = 0.0;
+		float result = 0.0;
 		char str_1[Max_Size_Str];
 		char str[Max_Size_Str] = " ";
 		int ch;
-		int C1= setjmp(ebuf);
+		int i = 0;
 		setlocale(LC_ALL, "RUS");
 		system("cls");
 		cout << "Введите пример: ";
@@ -245,21 +295,12 @@ int main()
 		ch = foolproof(str_1);
 		if (ch == 1)
 		{
-			C3:
 			cout << "Некоректное выражение" << endl;
 			goto C2;
-			
 		}
 		polish_notation(str_1, str);
 		cout << str << endl;
-		if (C1 == 1)
-		{
-			goto C3;
-		}
-		else
-		{
-			calculator(str);
-		}
+		calculator(str_1);
 		C2:
 		cout << "Хотите повторить?" << endl;
 		cout << "1.Да" << endl;

@@ -15,9 +15,9 @@ public:
 	
 	TStack(int n);
 	
-	int IsEmpty(void);
+	int IsEmpty(void) const;
 	
-	int IsFull(void);
+	int IsFull(void) const;
 	
 	void Put(const int val);
 	

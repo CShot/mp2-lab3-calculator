@@ -32,23 +32,23 @@ TStack::TStack(int Si)
 	top = -1;
 	Size = Si;
 	pMem = new int[Size];
-	for (int i = 0; i < Si; i++)
+	for (int i = 0; i < Size; i++)
 	{
 		pMem[i] = 0;
 	}
 }
 
-int TStack::IsEmpty(void)
+int TStack::IsEmpty(void) const
 {
 	return top == -1;
 }
 
-int TStack::IsFull(void)
+int TStack::IsFull(void) const
 {
 	return top == Size - 1;
 }
 
-void TStack::Put(const int val)
+void TStack::Put(int val)
 {
 	pMem[++top] = val;
 }

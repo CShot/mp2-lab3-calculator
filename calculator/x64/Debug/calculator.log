@@ -1,3 +1,6 @@
 ﻿  main.cpp
-c:\users\максимка\work\mp2-lab3-calculator\calculator\main.cpp(172): warning C4244: аргумент: преобразование "float" в "const int", возможна потеря данных
+c:\users\максимка\work\mp2-lab3-calculator\calculator\main.cpp(170): warning C4244: аргумент: преобразование "float" в "const int", возможна потеря данных
+c:\users\максимка\work\mp2-lab3-calculator\calculator\main.cpp(193): warning C4244: аргумент: преобразование "float" в "const int", возможна потеря данных
+c:\users\максимка\work\mp2-lab3-calculator\calculator\main.cpp(205): warning C4244: аргумент: преобразование "float" в "const int", возможна потеря данных
+c:\users\максимка\work\mp2-lab3-calculator\calculator\main.cpp(207): warning C4244: =: преобразование "int" в "float", возможна потеря данных
   calculator.vcxproj -> C:\Users\Максимка\Work\mp2-lab3-calculator\x64\Debug\calculator.exe
