@@ -131,7 +131,8 @@ int calculator(char * str)
 			else
 			{
 				cout << "На ноль делить нельзя!" << endl;
-				return 0;
+				result = NULL;
+				return result;
 			}
 
 		}
