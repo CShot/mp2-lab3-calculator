@@ -7,7 +7,7 @@ class TStack
 	int *pMem;
 	int Size;
 public:	
-	TStack(const TStack &s);
+	TStack(const TStack &v);
 	
 	TStack();
     

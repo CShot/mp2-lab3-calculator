@@ -109,7 +109,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\test\test_arithmetic.cpp" />
+    <ClCompile Include="..\..\..\test\test_calculator.cpp" />
     <ClCompile Include="..\..\..\test\test_main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

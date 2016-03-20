@@ -10,7 +10,7 @@
     <ClCompile Include="..\..\..\test\test_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\test_arithmetic.cpp">
+    <ClCompile Include="..\..\..\test\test_calculator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

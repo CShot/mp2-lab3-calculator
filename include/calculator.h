@@ -4,7 +4,6 @@
 #include<cstring>
 #include<ctype.h>
 #include<locale.h>
-#include <setjmp.h>
 
 using namespace std;
 
@@ -13,7 +12,6 @@ const int Max_Size_Str = 50;
 int priority(char str_s);
 void polish_notation(char *str, char *result);
 int foolproof(char *str);
-jmp_buf ebuf;
 
 int priority(char str_s)
 {
