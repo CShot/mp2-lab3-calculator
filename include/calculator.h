@@ -161,8 +161,21 @@ int foolproof(char *str)
 {
 	int ch = 0;
 	int i = 0;
-	int q = 0, p = 0;
+	int q = 0, p = 0,k = 0;
 	TStack skob;
+	while (str[i] != '\0') //Отсутствие необходимых символов в строке
+	{
+		if ((str[i] == '*') || (str[i] == '/') || (str[i] == '-') || (str[i] == '+'))
+		{
+			k++;
+		}
+		i++;
+	}
+	if (k == 0)
+	{
+		ch = 1;
+	}
+	i = 0;
 	while (str[i] != NULL) //Неподходящие символы(ASCII)
 	{
 		if ((str[i]<40) || (str[i]>57) || (str[i] == 44) || (str[i] == 46) || (str[i] == 32) )
