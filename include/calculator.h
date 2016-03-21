@@ -237,5 +237,14 @@ int foolproof(char *str)
 		i++;
 	}
 	i = 0;
+	while (str[i] != NULL)
+	{
+		if ((str[i] == '(' ) && (str[i + 1] == '-' ))
+		{
+			ch = 1;
+		}
+		i++;
+	}
+	i = 0;
   return ch;
 }
